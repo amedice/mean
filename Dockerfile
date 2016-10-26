@@ -1,11 +1,17 @@
 # Build:
-# docker build -t amedice/mean .
+# docker build -t amedice/meanjs .
 #
 # Run:
-# docker run -it amedice/mean
+# docker run -it amedice/meanjs
 #
 # Compose:
 # docker-compose up -d
+
+#OR 
+
+#docker build -t amedice/meanjs .
+#docker run -p 27017:27017 -d --name db mongo
+#docker run -p 3000:3000 --link db:db_1 amedice/meanjs
 
 FROM ubuntu:latest
 MAINTAINER MEAN.JS
@@ -54,7 +60,7 @@ RUN sudo apt-get install -yq nodejs \
 RUN npm install --quiet -g gulp bower yo generator-meanjs mocha karma-cli pm2 && npm cache clean
 
 # Create workspace
-RUN useradd -ms /bin/bash meanjs sudo
+RUN useradd -ms /bin/bash meanjs
 RUN mkdir -p /home/meanjs/public/lib
 USER meanjs
 WORKDIR /home/meanjs
