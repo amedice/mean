@@ -1,8 +1,8 @@
 # Build:
-# docker build -t meanjs/mean .
+# docker build -t amedice/mean .
 #
 # Run:
-# docker run -it meanjs/mean
+# docker run -it amedice/mean
 #
 # Compose:
 # docker-compose up -d
@@ -51,25 +51,28 @@ RUN sudo apt-get install -yq nodejs \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install MEAN.JS Prerequisites
-RUN npm install --quiet -g gulp bower yo mocha karma-cli pm2 && npm cache clean
+RUN npm install --quiet -g gulp bower yo generator-meanjs mocha karma-cli pm2 && npm cache clean
 
-RUN mkdir -p /opt/mean.js/public/lib
-WORKDIR /opt/mean.js
+# Create workspace
+RUN useradd -ms /bin/bash meanjs sudo
+RUN mkdir -p /home/meanjs/public/lib
+USER meanjs
+WORKDIR /home/meanjs
 
 # Copies the local package.json file to the container
 # and utilities docker container cache to not needing to rebuild
 # and install node_modules/ everytime we build the docker, but only
 # when the local package.json file changes.
 # Install npm packages
-COPY package.json /opt/mean.js/package.json
+COPY package.json /home/meanjs/package.json
 RUN npm install --quiet && npm cache clean
 
 # Install bower packages
-COPY bower.json /opt/mean.js/bower.json
-COPY .bowerrc /opt/mean.js/.bowerrc
+COPY bower.json /home/meanjs/bower.json
+COPY .bowerrc /home/meanjs/.bowerrc
 RUN bower install --quiet --allow-root --config.interactive=false
 
-COPY . /opt/mean.js
+COPY . /home/meanjs
 
 # Run MEAN.JS server
 CMD ["npm", "start"]
