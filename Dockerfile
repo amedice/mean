@@ -11,7 +11,7 @@
 
 #docker build -t amedice/meanjs .
 #docker run -p 27017:27017 -d --name db mongo
-#docker run -p 3000:3000 --link db:db_1 amedice/meanjs
+#docker run -p 3000:3000 --link mean_db_1:db_1 amedice/meanjs
 
 FROM ubuntu:latest
 MAINTAINER MEAN.JS
@@ -61,21 +61,21 @@ RUN npm install --quiet -g gulp bower yo generator-meanjs mocha karma-cli pm2 &&
 
 # Create workspace
 RUN useradd -ms /bin/bash meanjs
-RUN mkdir -p /home/meanjs/public/lib
 USER meanjs
+RUN mkdir -p /home/meanjs/public/lib
 WORKDIR /home/meanjs
+COPY package.json /home/meanjs/package.json
+COPY bower.json /home/meanjs/bower.json
+COPY .bowerrc /home/meanjs/.bowerrc
 
 # Copies the local package.json file to the container
 # and utilities docker container cache to not needing to rebuild
 # and install node_modules/ everytime we build the docker, but only
 # when the local package.json file changes.
 # Install npm packages
-COPY package.json /home/meanjs/package.json
 RUN npm install --quiet && npm cache clean
 
 # Install bower packages
-COPY bower.json /home/meanjs/bower.json
-COPY .bowerrc /home/meanjs/.bowerrc
 RUN bower install --quiet --allow-root --config.interactive=false
 
 COPY . /home/meanjs
