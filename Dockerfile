@@ -61,12 +61,9 @@ RUN npm install --quiet -g gulp bower yo generator-meanjs mocha karma-cli pm2 &&
 
 # Create workspace
 RUN useradd -ms /bin/bash meanjs
-USER meanjs
 RUN mkdir -p /home/meanjs/public/lib
 WORKDIR /home/meanjs
 COPY package.json /home/meanjs/package.json
-COPY bower.json /home/meanjs/bower.json
-COPY .bowerrc /home/meanjs/.bowerrc
 
 # Copies the local package.json file to the container
 # and utilities docker container cache to not needing to rebuild
@@ -76,6 +73,10 @@ COPY .bowerrc /home/meanjs/.bowerrc
 RUN npm install --quiet && npm cache clean
 
 # Install bower packages
+COPY bower.json /home/meanjs/bower.json
+COPY .bowerrc /home/meanjs/.bowerrc
+RUN chown -rf meanjs:meanjs /home/meanjs
+USER meanjs
 RUN bower install --quiet --allow-root --config.interactive=false
 
 COPY . /home/meanjs
