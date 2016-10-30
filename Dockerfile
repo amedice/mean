@@ -80,7 +80,7 @@ RUN bower install --quiet --allow-root --config.interactive=false
 COPY . /home/meanjs
 
 RUN chown -Rf meanjs:meanjs /home/meanjs
-USER meanjs
+#USER meanjs
 
 # Run MEAN.JS server
 CMD ["npm", "start"]
