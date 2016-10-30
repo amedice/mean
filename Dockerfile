@@ -11,8 +11,7 @@
 
 #docker build -t amedice/meanjs .
 #docker run -p 27017:27017 -d --name db mongo
-#docker run -p 3000:3000 --link db:db_1 amedice/meanjs
-
+#docker run -p 3000:3000 --link db:db_1 --name meanjs amedice/meanjs
 
 FROM ubuntu:latest
 MAINTAINER MEAN.JS
