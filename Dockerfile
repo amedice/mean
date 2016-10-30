@@ -76,11 +76,12 @@ RUN npm install --quiet && npm cache clean
 # Install bower packages
 COPY bower.json /home/meanjs/bower.json
 COPY .bowerrc /home/meanjs/.bowerrc
-RUN chown -Rf meanjs:meanjs /home/meanjs
-#USER meanjs
 RUN bower install --quiet --allow-root --config.interactive=false
 
 COPY . /home/meanjs
+
+RUN chown -Rf meanjs:meanjs /home/meanjs
+USER meanjs
 
 # Run MEAN.JS server
 CMD ["npm", "start"]
