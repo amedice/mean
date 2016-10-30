@@ -11,7 +11,8 @@
 
 #docker build -t amedice/meanjs .
 #docker run -p 27017:27017 -d --name db mongo
-#docker run -p 3000:3000 --link mean_db_1:db_1 amedice/meanjs
+#docker run -p 3000:3000 --link db:db_1 amedice/meanjs
+
 
 FROM ubuntu:latest
 MAINTAINER MEAN.JS
@@ -75,8 +76,8 @@ RUN npm install --quiet && npm cache clean
 # Install bower packages
 COPY bower.json /home/meanjs/bower.json
 COPY .bowerrc /home/meanjs/.bowerrc
-RUN chown -rf meanjs:meanjs /home/meanjs
-USER meanjs
+RUN chown -Rf meanjs:meanjs /home/meanjs
+#USER meanjs
 RUN bower install --quiet --allow-root --config.interactive=false
 
 COPY . /home/meanjs
